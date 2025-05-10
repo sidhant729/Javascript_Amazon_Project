@@ -47,7 +47,7 @@ addProducts = (product) => {
         </div>
 
         <button class="add-to-cart-button button-primary js-add-to-cart"
-        data-product-id="${element.id}"
+        data-product-id="${element.id}">
             Add to Cart
         </button>
         </div>
@@ -76,6 +76,10 @@ document.querySelectorAll('.js-add-to-cart').forEach(button => {
                 quantity : 1
             });      
         }
-        console.log(cart);
+
+        // Calculate total Quantity to show number of Items in cart on UI
+        let totalQuantity = 0;
+        cart.forEach((item) => totalQuantity += item.quantity);
+        document.querySelector('.js-cart-quantity').innerHTML = totalQuantity;
     })
 })
