@@ -8,7 +8,7 @@ const showItems = (items) => {
     const product = products.find((p) => p.id === item.productId);
     console.log(product)
     content += `
-    <div class="cart-item-container">
+    <div class="cart-item-container js-cart-item-container-${item.productId}">
             <div class="delivery-date">
               Delivery date: Tuesday, June 21
             </div>
@@ -91,6 +91,8 @@ showItems(cart)
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
     const { productId } = link.dataset;
+    const element = document.querySelector(`.js-cart-item-container-${productId}`);
+    element.remove();
     removeFromCart(productId)
     console.log(cart)
   })
