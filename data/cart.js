@@ -36,11 +36,11 @@ export const addToCart = (productId, currentQuantity) => {
   saveToStorage(cart);
 };
 
-export const updateCartQuantity = () => {
+export const calculateCartQuantity = () => {
   // Calculate total Quantity to show number of Items in cart on UI
   let totalQuantity = 0;
   cart.forEach((cartItem) => (totalQuantity += cartItem.quantity));
-  document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
+  return totalQuantity;
 };
 
 export const removeFromCart = (productId) => {
