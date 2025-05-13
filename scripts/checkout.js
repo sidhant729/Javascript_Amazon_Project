@@ -26,7 +26,7 @@ const showItems = (items) => {
                 </div>
                 <div class="product-quantity">
                   <span>
-                    Quantity: <span class="quantity-label">${
+                    Quantity: <span class="quantity-label js-quantity-${item.productId}">${
                       item.quantity
                     }</span>
                   </span>
@@ -124,17 +124,39 @@ document.querySelectorAll(".js-update-quantity-link").forEach((item) => {
   item.addEventListener('click', () => {
     const { productId } = item.dataset;
     document
-      .querySelector(".quantity-input")
+      .querySelector(`.js-quantity-input-${productId}`)
       .classList.add("is-editing-quantity");
     
-    document.querySelector(".save-quantity-link").classList.add('is-editing-quantity');
-
+    document
+      .querySelector(`.js-save-link-${productId}`)
+      .classList.add("is-editing-quantity");
     // When user Clicks save, fetch the value from the input box and change the quantity of the product;
-    document.querySelector(`.js-save-link-${productId}`).addEventListener('click', () => {
-      const fetchValue = document.querySelector(`.js-quantity-input-${productId}`).value;
-      console.log(fetchValue);
+    document
+      .querySelector(`.js-save-link-${productId}`)
+      .addEventListener("click", () => {
+        const fetchValue = Number(
+          document.querySelector(`.js-quantity-input-${productId}`).value
+        );
+        console.log(fetchValue);
 
-      // Just Save the fetchValue as the quantity and remove the Added css and change the quantity in the checkout and main page section.
+        cart.forEach((item) => {
+          if (item.productId === productId) {
+            item.quantity = fetchValue;
+          }
+        });
+
+        // Save to Local Storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        document.querySelector(`.js-quantity-${productId}`).innerHTML = `${fetchValue}`;
+        updateCheckoutCartQuantity();
+        document
+          .querySelector(`.js-save-link-${productId}`)
+          .classList.remove("is-editing-quantity");
+          document
+            .querySelector(`.js-quantity-input-${productId}`)
+            .classList.remove("is-editing-quantity");
+      });
     })
-  })
+
 });

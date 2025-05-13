@@ -85,7 +85,7 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   });
 });
 
-const updateCartQuantity = () => {
+export const updateCartQuantity = () => {
   const currentQuantity = calculateCartQuantity();
   document.querySelector(
     ".js-update-cart-quantity"
