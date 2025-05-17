@@ -2,7 +2,8 @@ import { cart, removeFromCart, calculateCartQuantity, updateDeliveryOption } fro
 import { products } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 export const renderOrderSummary = () => {
   const showItems = (items) => {
@@ -10,15 +11,9 @@ export const renderOrderSummary = () => {
     items.forEach((item) => {
       const product = products.find((p) => p.id === item.productId);
       const deliveryOptionId = item.deliveryOptionId;
-      let deliveryTime = '';
-      deliveryOptions.forEach((deliveryOption) => {
-        if (deliveryOptionId === deliveryOption.id) {
-          deliveryTime = deliveryOption.deliveryTime;
-        }
-      })
-      console.log(deliveryTime)
+      const matchingDelivery = getDeliveryOption(deliveryOptionId);
       const today = dayjs();
-      const deliveryDate = today.add(deliveryTime, 'days');
+      const deliveryDate = today.add(matchingDelivery.deliveryTime, 'days');
       const dateString = deliveryDate.format('dddd, MMMM D' );
       content += `
       <div class="cart-item-container js-cart-item-container-${item.productId}">
@@ -82,6 +77,7 @@ export const renderOrderSummary = () => {
       element.remove();
       removeFromCart(productId);
       updateCheckoutCartQuantity();
+      renderPaymentSummary();
       console.log(cart);
     });
   });
@@ -132,9 +128,9 @@ export const renderOrderSummary = () => {
             document
               .querySelector(`.js-quantity-input-${productId}`)
               .classList.remove("is-editing-quantity");
+          renderPaymentSummary();
         });
       })
-
   });
 
   function deliveryOptionsHtml(productId, cartItem) {
@@ -170,6 +166,7 @@ export const renderOrderSummary = () => {
       updateDeliveryOption(productId, deliveryOptionId);
       showItems(cart);
       renderOrderSummary();
+      renderPaymentSummary();
     })
   })
 }
