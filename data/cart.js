@@ -56,3 +56,14 @@ export const removeFromCart = (productId) => {
   cart = newCart;
   saveToStorage(cart);
 }
+
+export const updateDeliveryOption = (productId, deliveryOption) => {
+  let matchingItem;
+  cart.forEach((item) => {
+    if(item.productId === productId) {
+      matchingItem = item;
+    }
+  })
+  matchingItem.deliveryOptionId = deliveryOption;
+  saveToStorage(cart);
+}
