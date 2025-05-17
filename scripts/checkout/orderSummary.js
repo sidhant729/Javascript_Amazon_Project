@@ -1,10 +1,9 @@
 import { cart, removeFromCart, calculateCartQuantity, updateDeliveryOption } from "../../data/cart.js";
 import { products } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
-import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
-
+import { deliveryDate } from "../utils/deliveryDate.js";
 export const renderOrderSummary = () => {
   const showItems = (items) => {
     let content = "";
@@ -12,9 +11,7 @@ export const renderOrderSummary = () => {
       const product = products.find((p) => p.id === item.productId);
       const deliveryOptionId = item.deliveryOptionId;
       const matchingDelivery = getDeliveryOption(deliveryOptionId);
-      const today = dayjs();
-      const deliveryDate = today.add(matchingDelivery.deliveryTime, 'days');
-      const dateString = deliveryDate.format('dddd, MMMM D' );
+      const dateString = deliveryDate(matchingDelivery.deliveryTime);
       content += `
       <div class="cart-item-container js-cart-item-container-${item.productId}">
               <div class="delivery-date js-delivery-date">
@@ -71,12 +68,9 @@ export const renderOrderSummary = () => {
   document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
       const { productId } = link.dataset;
-      const element = document.querySelector(
-        `.js-cart-item-container-${productId}`
-      );
-      element.remove();
       removeFromCart(productId);
       updateCheckoutCartQuantity();
+      renderOrderSummary();
       renderPaymentSummary();
       console.log(cart);
     });
@@ -136,9 +130,7 @@ export const renderOrderSummary = () => {
   function deliveryOptionsHtml(productId, cartItem) {
     let content = '';
     deliveryOptions.forEach(deliveryOption => {
-      const today = dayjs();
-      const deliveryDate = today.add(deliveryOption.deliveryTime, 'days');
-      const dateString = deliveryDate.format('dddd, MMMM D' );
+      const dateString = deliveryDate(deliveryOption.deliveryTime);
       const priceString = deliveryOption.priceCents === 0 ? "Free" : `$${formatCurrency(deliveryOption.priceCents)}`;
       const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
       content += `<div class="delivery-option js-delivery-option" data-product-id="${productId}" data-delivery-option-id="${deliveryOption.id}">
