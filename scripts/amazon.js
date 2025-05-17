@@ -17,14 +17,14 @@ const showProducts = (product) => {
 
         <div class="product-rating-container">
             <img class="product-rating-stars"
-            src="/images/ratings/rating-${element.rating.stars * 10}.png">
+            src="${element.getStarsUrl()}">
             <div class="product-rating-count link-primary">
             ${element.rating.count}
             </div>
         </div>
 
         <div class="product-price">
-            $${formatCurrency(element.priceCents)}
+            ${element.getPrice()}
         </div>
 
         <div class="product-quantity-container">
