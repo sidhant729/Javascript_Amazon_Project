@@ -41,7 +41,11 @@ const showProducts = (product) => {
             <option value="10">10</option>
             </select>
         </div>
-
+        <div>
+          ${
+            element.extractInfoHtml()
+          }
+        </div>
         <div class="product-spacer"></div>
 
         <div class="added-to-cart js-added-to-cart-${element.id}">
