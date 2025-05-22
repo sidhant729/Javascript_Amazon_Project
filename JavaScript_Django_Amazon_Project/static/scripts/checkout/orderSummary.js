@@ -4,6 +4,7 @@ import { formatCurrency } from "../utils/money.js";
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
 import { deliveryDate } from "../utils/deliveryDate.js";
+
 export const renderOrderSummary = () => {
   const showItems = (items) => {
     let content = "";
