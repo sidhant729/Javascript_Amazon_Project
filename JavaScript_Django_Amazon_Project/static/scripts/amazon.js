@@ -11,7 +11,7 @@ const showProducts = (product) => {
         <div class="product-container"> 
         <div class="product-image-container">
             <img class="product-image"
-            src="${element.image}">
+            src="/static/${element.image}">
         </div>
 
         <div class="product-name limit-text-to-2-lines">
@@ -20,7 +20,7 @@ const showProducts = (product) => {
 
         <div class="product-rating-container">
             <img class="product-rating-stars"
-            src="${element.getStarsUrl()}">
+            src="/static${element.getStarsUrl()}">
             <div class="product-rating-count link-primary">
             ${element.rating.count}
             </div>
