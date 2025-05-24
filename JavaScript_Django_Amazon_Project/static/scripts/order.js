@@ -1,8 +1,8 @@
 import { formatCurrency } from "./utils/money.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
+import { formattedDate } from "./utils/formattedDate.js";
+import {cart} from "../data/cart.js";
 let orderArray = JSON.parse(localStorage.getItem('orders')) || [];
-console.log(orderArray);
-
 
 export const addOrder = (order) => {
     orderArray.unshift(order);
@@ -17,7 +17,7 @@ export const showOrders = () => {
     let content = ``;
     orderArray.forEach((order) => {
         const orderId = order.id;
-        const orderDate = order.orderTime;
+        const orderDate = formattedDate(order.orderTime);
         const totalPriceCents = order.totalCostCents;
         const orderProducts = order.products;
         
@@ -29,7 +29,7 @@ export const showOrders = () => {
                 console.error(`Product not found: ${product.productId}`);
                 return; // Skip this product
             }
-            
+            const deliveryDate = formattedDate(product.estimatedDeliveryTime);
             orderDetailsContent += `
             <div class="product-image-container">
                 <img src="/static/${matchingProduct.image}">
@@ -40,7 +40,7 @@ export const showOrders = () => {
                     ${matchingProduct.name}
                 </div>
                 <div class="product-delivery-date">
-                    Arriving on: ${product.deliveryTime}
+                    Arriving on: ${deliveryDate}
                 </div>
                 <div class="product-quantity">
                     Quantity: ${product.quantity}

@@ -64,7 +64,6 @@ export const renderPaymentSummary = () => {
       })
       const order = await response.json();
       addOrder(order);
-      console.log(order);
       window.location.href = 'order';
     })
 }
