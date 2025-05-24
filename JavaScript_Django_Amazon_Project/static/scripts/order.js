@@ -1,10 +1,11 @@
 import { formatCurrency } from "./utils/money.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
 import { formattedDate } from "./utils/formattedDate.js";
-import {cart} from "../data/cart.js";
+import { cart, addToCart } from "../data/cart.js";
 let orderArray = JSON.parse(localStorage.getItem('orders')) || [];
 
 export const addOrder = (order) => {
+    console.log('my order is', order);
     orderArray.unshift(order);
     addToLocalStorage(orderArray);
 }
@@ -12,9 +13,8 @@ export const addOrder = (order) => {
 const addToLocalStorage = (orderArray) => {
     localStorage.setItem('orders', JSON.stringify(orderArray));
 }
-
+let content = ``;
 export const showOrders = () => {
-    let content = ``;
     orderArray.forEach((order) => {
         const orderId = order.id;
         const orderDate = formattedDate(order.orderTime);
@@ -45,7 +45,7 @@ export const showOrders = () => {
                 <div class="product-quantity">
                     Quantity: ${product.quantity}
                 </div>
-                <button class="buy-again-button button-primary">
+                <button class="buy-again-button button-primary js-buy-again-button" data-product-id="${product.productId}">
                     <img class="buy-again-icon" src="/static/images/icons/buy-again.png">
                     <span class="buy-again-message">Buy it again</span>
                 </button>
@@ -84,9 +84,25 @@ export const showOrders = () => {
             </div>
         </div>`;
     });
-    document.querySelector('.orders-grid').innerHTML = content;
 }
 
 loadProductsFetch().then(() => {
   showOrders();
+  document.querySelector('.orders-grid').innerHTML = content;
+  updateCartQuantity();
+}).then(() => {
+    
+    document.querySelectorAll('.js-buy-again-button').forEach((button) => {
+        button.addEventListener('click', () => {
+            const {productId} = button.dataset;
+            addToCart(productId, 1);
+            updateCartQuantity();
+        })
+    })
 });
+const updateCartQuantity = () => {
+    let totalQuantity = 0;
+    cart.forEach((item) => (totalQuantity += item.quantity));
+    document.querySelector('.js-order-cart-quantity').innerHTML = `${totalQuantity}`;
+}
+

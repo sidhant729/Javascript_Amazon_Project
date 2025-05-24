@@ -3,6 +3,7 @@ import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
 import { addOrder } from "../order.js";
+
 export const renderPaymentSummary = () => {
     let productPriceCents = 0;
     let shippingPriceCents = 0;
@@ -51,19 +52,58 @@ export const renderPaymentSummary = () => {
 
           <button class="place-order-button button-primary js-place-order-button">
             Place your order
-          </button>`
+          </button>`;
     
+    // Update the payment summary HTML
     document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHtml;
-    document.querySelector('.js-place-order-button').addEventListener('click', async () => {
-      const response = await fetch('https://supersimplebackend.dev/orders', {
-        method : 'POST',
-        headers : {
-          'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({cart})
-      })
-      const order = await response.json();
-      addOrder(order);
-      window.location.href = 'order';
-    })
+    
+    // Add event listener to the button AFTER it's been added to the DOM
+    const placeOrderButton = document.querySelector('.js-place-order-button');
+    if (placeOrderButton) {
+        placeOrderButton.addEventListener('click', async () => {
+            try {
+                if (!cart.length) {
+                  console.log('your cart is empty')
+                    return;
+                }
+                const response = await fetch('https://supersimplebackend.dev/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({cart})
+                });
+                
+                const order = await response.json();
+                console.log('order is ', order);
+                addOrder(order);
+                
+                // Clear the cart
+                clearCart();
+                
+                // Redirect to order page
+                window.location.href = 'order';
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert('There was a problem placing your order. Please try again.');
+            }
+        });
+    } else {
+        console.error('Place order button not found in the DOM');
+    }
+};
+
+// Function to clear the cart
+function clearCart() {
+    // Empty the cart array by removing all items
+    while(cart.length > 0) {
+        cart.pop();
+    }
+    
+    // Save the empty cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    console.log('Cart has been cleared after order placement');
 }
+
+// Remove the DOMContentLoaded event listener that was causing the error
