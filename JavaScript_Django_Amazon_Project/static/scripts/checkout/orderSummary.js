@@ -1,4 +1,4 @@
-import { cart, removeFromCart, calculateCartQuantity, updateDeliveryOption } from "../../data/cart.js";
+import { cart, removeFromCart, calculateCartQuantity, updateDeliveryOption, updateCartInDB } from "../../data/cart.js";
 import { products } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
@@ -113,8 +113,9 @@ export const renderOrderSummary = () => {
           });
 
           // Save to Local Storage
-          localStorage.setItem('cart', JSON.stringify(cart));
-
+          console.log('before');
+          updateCartInDB(cart)
+          console.log('after')
           document.querySelector(`.js-quantity-${productId}`).innerHTML = `${fetchValue}`;
           updateCheckoutCartQuantity();
           document

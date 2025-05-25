@@ -1,7 +1,16 @@
-import { cart, addToCart, calculateCartQuantity } from "../data/cart.js";
-import { products, loadProducts } from "../data/products.js";
+import { cart, addToCart, calculateCartQuantity, getCartFromDB } from "../data/cart.js";
+import { products, getProductsFromDB } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
-loadProducts(renderProductsGrid);
+
+Promise.all([
+  getProductsFromDB(),
+  getCartFromDB()
+]).then(() => {
+  console.log('Data loaded successfully');
+  console.log('Cart is:', cart);
+  renderProductsGrid();
+  updateCartQuantity();
+});
 
 function renderProductsGrid() {
 const showProducts = (product) => {
