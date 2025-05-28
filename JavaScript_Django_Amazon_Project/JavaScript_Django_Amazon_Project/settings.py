@@ -81,7 +81,17 @@ WSGI_APPLICATION = 'JavaScript_Django_Amazon_Project.wsgi.application'
 #     }
 # }
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'JavaScriptDjangoApplication',
+        "CLIENT": {
+            'host': 'mongodb+srv://sidhant729:jBMna4J3yBRPUKOr@javascriptdjangoproject.cdckvms.mongodb.net/',
+            'username': 'sidhant729',
+            'password': 'jBMna4J3yBRPUKOr',
+        },
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

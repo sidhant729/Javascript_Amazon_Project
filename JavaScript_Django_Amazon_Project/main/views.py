@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
-from .models import Products, Cart
+import uuid
+from .models import Products, Cart, Order
 # Create your views here.
 def amazon(request):
     if request.method == 'GET':
@@ -15,6 +16,7 @@ def amazon(request):
             if request.headers.get('Content-Type') == 'application/json':
                 return JsonResponse(list(cart_items.values()), safe=False)
     return render(request, 'amazon.html')
+
 @csrf_exempt
 def checkout(request):
     if request.method == 'POST':
@@ -60,22 +62,32 @@ def checkout(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
     return render(request, 'checkout.html')
 
-def order(request):
-    return render(request, 'orders.html')
 @csrf_exempt
-def test(request):
+def order(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            Products.objects.create(
-                id=data['id'],
-                image=data['image'],
-                name=data['name'],
-                rating=data['rating'],
-                priceCents=data['priceCents'],
-                keywords=data['keywords'],
+            cart_data = data.get('cart', []);
+            total_cents = data.get('totalCents', 0);
+            order = Order.objects.create(
+                totalCostCents=total_cents,
+                products=cart_data
             )
-            return JsonResponse({'success': True})
+            return JsonResponse({
+                'success': True, 
+                'orderId': str(order.id),
+                'orderTime': order.orderTime
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON format'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'success': False, 'error': f'Missing required field: {str(e)}'}, status=400)
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
-    return render(request, 'test.html')
+            print(f"Error creating order: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    if request.method == 'GET':
+        print('inside')
+        orders = Order.objects.all()
+        if request.headers.get('Content-Type') == 'application/json':
+            return JsonResponse(list(orders.values()), safe=False)
+    return render(request, 'orders.html')

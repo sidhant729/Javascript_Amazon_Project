@@ -2,7 +2,6 @@ import { cart } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
-// import { addOrder } from "../order.js";
 
 export const renderPaymentSummary = () => {
     let productPriceCents = 0;
@@ -60,29 +59,30 @@ export const renderPaymentSummary = () => {
     // Add event listener to the button AFTER it's been added to the DOM
     const placeOrderButton = document.querySelector('.js-place-order-button');
     if (placeOrderButton) {
+      console.log('Inside');
+      //data is {'cart': [{'id': 'f79baf68-548c-4058-a4b3-f792453bf495', 
+      // 'productId': '83d4ca15-0f35-48f5-b7a3-1ea210004f2e', 'quantity': 1, 
+      // 'deliveryOptionId': '1'}, {'id': 'b7de9bd5-3c8b-465f-8291-133cd07b87c7', 
+      // 'productId': '8c9c52b5-5a19-4bcb-a5d1-158a74287c53',
+      //  'quantity': 1, 'deliveryOptionId': '1'}]}
         placeOrderButton.addEventListener('click', async () => {
             try {
-                if (!cart.length) {
-                  console.log('your cart is empty')
-                    return;
-                }
-                const response = await fetch('https://supersimplebackend.dev/orders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+                await fetch('/order/', {
+                    headers : {
+                        'Content-Type' : 'application/json'
                     },
-                    body: JSON.stringify({cart})
-                });
-                
-                const order = await response.json();
-                console.log('order is ', order);
-                // addOrder(order);
+                    method : 'POST',
+                    body : JSON.stringify({cart, totalCents})
+                }).then(response => response.json())
+                .then((data) => {
+                    console.log('data is ', data);
+                })
                 
                 // Clear the cart
                 clearCart();
                 
                 // Redirect to order page
-                window.location.href = 'order';
+                window.location.href = '/order/';
             } catch (error) {
                 console.error('Error placing order:', error);
                 alert('There was a problem placing your order. Please try again.');

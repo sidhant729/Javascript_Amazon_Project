@@ -15,4 +15,10 @@ class Cart(models.Model):
     quantity = models.IntegerField()
     deliveryOptionId = models.CharField(max_length=100)
 
+class Order(models.Model):
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
+    orderTime = models.DateTimeField(auto_now_add=True)
+    totalCostCents = models.IntegerField()
+    products = models.JSONField()
+
 
