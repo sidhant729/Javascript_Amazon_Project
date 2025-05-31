@@ -1,6 +1,6 @@
 import { formatCurrency } from "./utils/money.js";
 import { getProduct, getProductsFromDB, products } from "../data/products.js";
-import { formattedDate } from "./utils/formattedDate.js";
+import { formattedDate, formattedDateISO } from "./utils/formattedDate.js";
 import { cart, addToCart, getCartFromDB } from "../data/cart.js";
 console.log('cart in order.js is', cart);
 
@@ -68,7 +68,7 @@ let content = ``;
 export const showOrders = () => {
     orderArray.forEach((order) => {
         const orderId = order.id;
-        const orderDate = formattedDate(order.orderTime);
+        const orderDate = formattedDateISO(order.orderTime);
         const totalPriceCents = order.totalCostCents;
         const orderProducts = order.products;
         
@@ -81,7 +81,7 @@ export const showOrders = () => {
                 console.error(`Product not found: ${product.productId}`);
                 return; // Skip this product
             }
-            const deliveryDate = formattedDate(product.estimatedDeliveryTime);
+            const deliveryDate = formattedDate(product.deliveryOptionId);
             orderDetailsContent += `
             <div class="product-image-container">
                 <img src="/static/${matchingProduct.image}">
