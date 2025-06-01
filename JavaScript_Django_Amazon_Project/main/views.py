@@ -91,3 +91,6 @@ def order(request):
         if request.headers.get('Content-Type') == 'application/json':
             return JsonResponse(list(orders.values()), safe=False)
     return render(request, 'orders.html')
+
+def tracking(request, orderId, productId):
+    return render(request, 'tracking.html', {'orderId': orderId, 'productId': productId})

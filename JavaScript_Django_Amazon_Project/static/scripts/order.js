@@ -4,7 +4,7 @@ import { formattedDate, formattedDateISO } from "./utils/formattedDate.js";
 import { cart, addToCart, getCartFromDB } from "../data/cart.js";
 console.log('cart in order.js is', cart);
 
-let orderArray = [];
+export let orderArray = [];
 export const getOrdersFromDB = async () => {
     console.log('inside GET request');
     const response = await fetch('/order/', {
@@ -17,28 +17,13 @@ export const getOrdersFromDB = async () => {
         return response.json()
       }).then((orderData) => {
         orderArray = orderData;
+        // reverse the orderArray to get the recent orders upfront
+        orderArray.reverse();
         console.log('orderArray is', orderArray);
         showOrders();
       });
       return response;
 }
-
-// Promise.all([
-//     getCartFromDB()
-//   ]).then(() => {
-//     console.log("Product and Cart is fetched from the DB");
-//     showOrders();
-//     document.querySelector('.orders-grid').innerHTML = content;
-//     // updateCartQuantity();
-//   }).then(() => {
-//         document.querySelectorAll('.js-buy-again-button').forEach((button) => {
-//         button.addEventListener('click', () => {
-//             const {productId} = button.dataset;
-//             addToCart(productId, 1);
-//             updateCartQuantity();
-//         })
-//     })
-//   });
 
 // Load products first, then cart, then orders in sequence
 getProductsFromDB()
@@ -52,7 +37,11 @@ getProductsFromDB()
   })
   .then(() => {
     console.log("All data fetched from the DB");
-    document.querySelector('.orders-grid').innerHTML = content;
+
+    const ordersGrid = document.querySelector('.orders-grid');
+    if(ordersGrid) {
+        ordersGrid.innerHTML = content;
+    }
     document.querySelectorAll('.js-buy-again-button').forEach((button) => {
         button.addEventListener('click', () => {
             const {productId} = button.dataset;
@@ -104,8 +93,8 @@ export const showOrders = () => {
             </div>
 
             <div class="product-actions">
-                <a href="tracking.html">
-                    <button class="track-package-button button-secondary">
+                <a href="/tracking/orderId=${orderId}&productId=${product.productId}">
+                    <button class="track-package-button button-secondary js-track-package-button">
                         Track package
                     </button>
                 </a>
@@ -138,9 +127,8 @@ export const showOrders = () => {
     });
 }
 
-// const updateCartQuantity = () => {
-//     let totalQuantity = 0;
-//     cart.forEach((item) => (totalQuantity += item.quantity));
-//     document.querySelector('.js-order-cart-quantity').innerHTML = `${totalQuantity}`;
-// }
-
+const updateCartQuantity = () => {
+    let totalQuantity = 0;
+    cart.forEach((item) => (totalQuantity += item.quantity));
+    document.querySelector('.js-order-cart-quantity').innerHTML = `${totalQuantity}`;
+}

@@ -1,4 +1,4 @@
-import { cart } from "../../data/cart.js";
+import { cart, updateCartInDB } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
@@ -99,10 +99,9 @@ function clearCart() {
     while(cart.length > 0) {
         cart.pop();
     }
-    
-    // Save the empty cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
+    // Save the empty cart to DB
+    console.log('cart in payment salary is ', cart);
+    updateCartInDB(cart);
     console.log('Cart has been cleared after order placement');
 }
 
