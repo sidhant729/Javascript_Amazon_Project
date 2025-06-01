@@ -6,7 +6,6 @@ console.log('cart in order.js is', cart);
 
 export let orderArray = [];
 export const getOrdersFromDB = async () => {
-    console.log('inside GET request');
     const response = await fetch('/order/', {
         headers : {
           'Content-Type' : 'application/json',
@@ -19,7 +18,6 @@ export const getOrdersFromDB = async () => {
         orderArray = orderData;
         // reverse the orderArray to get the recent orders upfront
         orderArray.reverse();
-        console.log('orderArray is', orderArray);
         showOrders();
       });
       return response;
@@ -28,16 +26,12 @@ export const getOrdersFromDB = async () => {
 // Load products first, then cart, then orders in sequence
 getProductsFromDB()
   .then(() => {
-    console.log('Products loaded successfully:', products);
     return getCartFromDB();
   })
   .then(() => {
-    console.log('Cart loaded successfully:', cart);
     return getOrdersFromDB();
   })
   .then(() => {
-    console.log("All data fetched from the DB");
-
     const ordersGrid = document.querySelector('.orders-grid');
     if(ordersGrid) {
         ordersGrid.innerHTML = content;
@@ -65,7 +59,6 @@ export const showOrders = () => {
         
         orderProducts.forEach((product) => {
             const matchingProduct = getProduct(product.productId);
-            console.log('product is', product);
             if (!matchingProduct) {
                 console.error(`Product not found: ${product.productId}`);
                 return; // Skip this product

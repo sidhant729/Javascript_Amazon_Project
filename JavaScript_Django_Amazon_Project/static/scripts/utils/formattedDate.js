@@ -1,6 +1,5 @@
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js"
 export const formattedDate = (deliveryOptionId) => {
-    console.log('deliveryOptionId is', deliveryOptionId);
     let deliveryTime;
     if (deliveryOptionId == '1') {
         deliveryTime = 7;
@@ -12,7 +11,6 @@ export const formattedDate = (deliveryOptionId) => {
         const today = dayjs();
         const deliveryDate = today.add(deliveryTime, 'days');
         const dateString = deliveryDate.format('dddd, MMMM D' );
-        console.log('dateString is', dateString);
         return dateString;
 }
 

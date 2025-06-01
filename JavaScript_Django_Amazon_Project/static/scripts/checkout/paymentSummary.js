@@ -53,18 +53,10 @@ export const renderPaymentSummary = () => {
             Place your order
           </button>`;
     
-    // Update the payment summary HTML
     document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHtml;
     
-    // Add event listener to the button AFTER it's been added to the DOM
     const placeOrderButton = document.querySelector('.js-place-order-button');
     if (placeOrderButton) {
-      console.log('Inside');
-      //data is {'cart': [{'id': 'f79baf68-548c-4058-a4b3-f792453bf495', 
-      // 'productId': '83d4ca15-0f35-48f5-b7a3-1ea210004f2e', 'quantity': 1, 
-      // 'deliveryOptionId': '1'}, {'id': 'b7de9bd5-3c8b-465f-8291-133cd07b87c7', 
-      // 'productId': '8c9c52b5-5a19-4bcb-a5d1-158a74287c53',
-      //  'quantity': 1, 'deliveryOptionId': '1'}]}
         placeOrderButton.addEventListener('click', async () => {
             try {
                 await fetch('/order/', {
@@ -73,9 +65,6 @@ export const renderPaymentSummary = () => {
                     },
                     method : 'POST',
                     body : JSON.stringify({cart, totalCents})
-                }).then(response => response.json())
-                .then((data) => {
-                    console.log('data is ', data);
                 })
                 
                 // Clear the cart
@@ -100,9 +89,7 @@ function clearCart() {
         cart.pop();
     }
     // Save the empty cart to DB
-    console.log('cart in payment salary is ', cart);
     updateCartInDB(cart);
-    console.log('Cart has been cleared after order placement');
 }
 
 // Remove the DOMContentLoaded event listener that was causing the error

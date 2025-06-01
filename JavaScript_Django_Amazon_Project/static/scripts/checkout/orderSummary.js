@@ -73,13 +73,11 @@ export const renderOrderSummary = () => {
       updateCheckoutCartQuantity();
       renderOrderSummary();
       renderPaymentSummary();
-      console.log(cart);
     });
   });
 
   const updateCheckoutCartQuantity = () => {
     const currentQuantity = calculateCartQuantity();
-    console.log(calculateCartQuantity)
     document.querySelector(
       ".js-total-cart-quantity"
     ).innerHTML = `${currentQuantity}`;
@@ -104,7 +102,6 @@ export const renderOrderSummary = () => {
           const fetchValue = Number(
             document.querySelector(`.js-quantity-input-${productId}`).value
           );
-          console.log(fetchValue);
 
           cart.forEach((item) => {
             if (item.productId === productId) {
@@ -113,9 +110,7 @@ export const renderOrderSummary = () => {
           });
 
           // Save to Local Storage
-          console.log('before');
           updateCartInDB(cart)
-          console.log('after')
           document.querySelector(`.js-quantity-${productId}`).innerHTML = `${fetchValue}`;
           updateCheckoutCartQuantity();
           document

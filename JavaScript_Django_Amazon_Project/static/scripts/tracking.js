@@ -13,7 +13,6 @@ getProductsFromDB()
     return getOrdersFromDB();
   })
   .then(() => {
-    console.log("All data fetched from the DB");
     renderTrackingPage();
   })
   .catch(error => {

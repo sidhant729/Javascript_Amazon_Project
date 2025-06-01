@@ -6,8 +6,6 @@ Promise.all([
   getProductsFromDB(),
   getCartFromDB()
 ]).then(() => {
-  console.log('Data loaded successfully');
-  console.log('Cart is:', cart);
   renderProductsGrid();
   updateCartQuantity();
 });
